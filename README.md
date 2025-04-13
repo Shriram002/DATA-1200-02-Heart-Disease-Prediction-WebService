@@ -1,4 +1,4 @@
-# DATA-1200-02 Heart Disease Prediction WebService
+# Heart Disease Prediction WebService
 
 This repository contains the final project for DATA 1200, which integrates machine learning with web services to predict heart disease. The project trains three models—**Random Forest**, **SVM** (both supervised), and **K-means** (unsupervised clustering)—on a heart disease dataset, then deploys these models via a RESTful API using Flask. In addition, a professional, interactive web page is provided for users to enter patient data and receive predictions.
 
