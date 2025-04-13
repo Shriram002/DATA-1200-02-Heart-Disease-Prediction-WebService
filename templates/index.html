@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Heart Disease Prediction</title>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    body {
+      padding-top: 50px;
+      background-color: #f8f9fa;
+    }
+    .container {
+      max-width: 800px;
+    }
+    .result {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #e9ecef;
+      border-radius: 5px;
+    }
+    .help-text {
+      font-size: 0.9em;
+      color: #6c757d;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 class="text-center">Heart Disease Prediction</h1>
+    <p class="text-center">Enter patient details below. Recommended ranges are provided as hints.</p>
+    
+    <!-- Prediction Form -->
+    <form id="predictionForm">
+      <div class="form-row">
+        <div class="form-group col-md-4">
+          <label for="Age">Age</label>
+          <input type="number" step="any" class="form-control" id="Age" name="Age" placeholder="e.g., 30-80" required>
+          <small class="help-text">Recommended range: 30-80 years</small>
+        </div>
+        <div class="form-group col-md-4">
+          <label for="RestingBP">Resting BP</label>
+          <input type="number" step="any" class="form-control" id="RestingBP" name="RestingBP" placeholder="e.g., 90-200" required>
+          <small class="help-text">Recommended range: 90-200 mm Hg</small>
+        </div>
+        <div class="form-group col-md-4">
+          <label for="Cholesterol">Cholesterol</label>
+          <input type="number" step="any" class="form-control" id="Cholesterol" name="Cholesterol" placeholder="e.g., 100-600" required>
+          <small class="help-text">Recommended range: 100-600 mg/dL</small>
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group col-md-4">
+          <label for="FastingBS">Fasting BS</label>
+          <input type="number" step="any" class="form-control" id="FastingBS" name="FastingBS" placeholder="0 or 1" required>
+          <small class="help-text">0: False, 1: True</small>
+        </div>
+        <div class="form-group col-md-4">
+          <label for="MaxHR">Max HR</label>
+          <input type="number" step="any" class="form-control" id="MaxHR" name="MaxHR" placeholder="e.g., 60-220" required>
+          <small class="help-text">Recommended range: 60-220 bpm</small>
+        </div>
+        <div class="form-group col-md-4">
+          <label for="Oldpeak">Oldpeak</label>
+          <input type="number" step="any" class="form-control" id="Oldpeak" name="Oldpeak" placeholder="e.g., 0-10" required>
+          <small class="help-text">Recommended range: 0-10</small>
+        </div>
+      </div>
+      
+      <!-- Categorical inputs (binary values for one-hot encoded features) -->
+      <div class="form-row">
+        <div class="form-group col-md-3">
+          <label for="Sex_M">Sex (M=1, F=0)</label>
+          <input type="number" min="0" max="1" class="form-control" id="Sex_M" name="Sex_M" required>
+        </div>
+        <div class="form-group col-md-3">
+          <label for="ChestPainType_ATA">ChestPainType ATA (1/0)</label>
+          <input type="number" min="0" max="1" class="form-control" id="ChestPainType_ATA" name="ChestPainType_ATA" required>
+        </div>
+        <div class="form-group col-md-3">
+          <label for="ChestPainType_NAP">ChestPainType NAP (1/0)</label>
+          <input type="number" min="0" max="1" class="form-control" id="ChestPainType_NAP" name="ChestPainType_NAP" required>
+        </div>
+        <div class="form-group col-md-3">
+          <label for="ChestPainType_TA">ChestPainType TA (1/0)</label>
+          <input type="number" min="0" max="1" class="form-control" id="ChestPainType_TA" name="ChestPainType_TA" required>
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group col-md-3">
+          <label for="RestingECG_Normal">RestingECG Normal (1/0)</label>
+          <input type="number" min="0" max="1" class="form-control" id="RestingECG_Normal" name="RestingECG_Normal" required>
+        </div>
+        <div class="form-group col-md-3">
+          <label for="RestingECG_ST">RestingECG ST (1/0)</label>
+          <input type="number" min="0" max="1" class="form-control" id="RestingECG_ST" name="RestingECG_ST" required>
+        </div>
+        <div class="form-group col-md-3">
+          <label for="ExerciseAngina_Y">ExerciseAngina Y (1/0)</label>
+          <input type="number" min="0" max="1" class="form-control" id="ExerciseAngina_Y" name="ExerciseAngina_Y" required>
+        </div>
+        <div class="form-group col-md-3">
+          <label for="ST_Slope_Flat">ST_Slope Flat (1/0)</label>
+          <input type="number" min="0" max="1" class="form-control" id="ST_Slope_Flat" name="ST_Slope_Flat" required>
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group col-md-3">
+          <label for="ST_Slope_Up">ST_Slope Up (1/0)</label>
+          <input type="number" min="0" max="1" class="form-control" id="ST_Slope_Up" name="ST_Slope_Up" required>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="modelSelect">Choose Model</label>
+        <select class="form-control" id="modelSelect">
+          <option value="randomforest">Random Forest</option>
+          <option value="svm">SVM</option>
+          <option value="kmeans">K-means</option>
+        </select>
+      </div>
+      
+      <button type="submit" class="btn btn-primary">Predict</button>
+    </form>
+    
+    <div id="result" class="result" style="display: none;">
+      <h3>Prediction Result:</h3>
+      <p id="resultText"></p>
+    </div>
+  </div>
+  
+  <!-- jQuery and Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <script>
+    document.getElementById("predictionForm").addEventListener("submit", function(event) {
+      event.preventDefault();
+      
+      var formData = {
+        "Age": document.getElementById("Age").value,
+        "RestingBP": document.getElementById("RestingBP").value,
+        "Cholesterol": document.getElementById("Cholesterol").value,
+        "FastingBS": document.getElementById("FastingBS").value,
+        "MaxHR": document.getElementById("MaxHR").value,
+        "Oldpeak": document.getElementById("Oldpeak").value,
+        "Sex_M": document.getElementById("Sex_M").value,
+        "ChestPainType_ATA": document.getElementById("ChestPainType_ATA").value,
+        "ChestPainType_NAP": document.getElementById("ChestPainType_NAP").value,
+        "ChestPainType_TA": document.getElementById("ChestPainType_TA").value,
+        "RestingECG_Normal": document.getElementById("RestingECG_Normal").value,
+        "RestingECG_ST": document.getElementById("RestingECG_ST").value,
+        "ExerciseAngina_Y": document.getElementById("ExerciseAngina_Y").value,
+        "ST_Slope_Flat": document.getElementById("ST_Slope_Flat").value,
+        "ST_Slope_Up": document.getElementById("ST_Slope_Up").value
+      };
+      
+      var model = document.getElementById("modelSelect").value;
+      var endpoint = "";
+      if (model === "randomforest") {
+        endpoint = "/randomforest/evaluate";
+      } else if (model === "svm") {
+        endpoint = "/svm/evaluate";
+      } else if (model === "kmeans") {
+        endpoint = "/kmeans/evaluate";
+      }
+      
+      fetch(endpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(formData)
+      })
+      .then(response => response.json())
+      .then(data => {
+      
+        var outputMessage = "";
+        if(data.diagnosis) {
+          outputMessage += data.diagnosis + "<br>";
+        }
+        if (data.prediction !== undefined) {
+          outputMessage += "Binary Prediction: " + data.prediction + " (1 = Heart Disease, 0 = No Heart Disease)";
+        }
+        document.getElementById("resultText").innerHTML = outputMessage;
+        document.getElementById("result").style.display = "block";
+      })
+      .catch(error => {
+        console.error("Error:", error);
+      });
+    });
+  </script>
+</body>
+</html>
