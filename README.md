@@ -87,9 +87,11 @@ pip install flask numpy pandas scikit-learn matplotlib
 
 ```bash
 git clone https://github.com/Shriram002/DATA-1200-02-Heart-Disease-Prediction-WebService.git
-
+```
+```bash
 cd DATA-1200-02-Heart-Disease-Prediction-WebService
 ```
+
 ## 2. Open in VS Code
    Launch the folder in Visual Studio Code or another IDE.
 
